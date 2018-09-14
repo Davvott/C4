@@ -3,7 +3,7 @@
 
 My version of a Connect4 game. PyGame conversion to come.
 
-- simple functions, run off main
+- simple functions, run off main()
 - input column slot for turn based play
 - board[x][y], printed in reverse;
 - is_position_winner() converted to suit my implementation of C4
