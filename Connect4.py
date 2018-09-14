@@ -3,10 +3,8 @@
 NONE = '.'
 RED = 'R'
 YELLOW = 'Y'
-
 columns = 7
 rows = 6
-required_to_win = 4
 
 board = [[NONE] * rows for _ in range(columns)]  
 
@@ -57,25 +55,30 @@ def print_board():
 
     # print header /footer of column numbers (col index)
     print('__'.join(map(str, range(columns))))
-
     print()
 
+
+def turn_check(play):
+    # for both valid entry and valid selection
+    pass
+    
 
 def main():
     player = RED
     game_loop = True
+    
     while game_loop == True:
         print_board()
         
         user_play = input('{}\'s turn: '.format('Red' if player == RED else 'Yellow'))
 
-        # need value checking on user_play
+        # need value checking and column checking on user_play
         inserted_piece = insert_piece(int(user_play), player)
         if inserted_piece == True:
             print("We have a winner! Congratulations {}".format(player))
 
             game_loop = False
-            print_board()
+            print()
 
         player = YELLOW if player == RED else RED
 
