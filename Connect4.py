@@ -3,19 +3,18 @@
 NONE = '.'
 RED = 'R'
 YELLOW = 'Y'
+
 columns = 7
 rows = 6
+required_to_win = 4
 
 board = [[NONE] * rows for _ in range(columns)]  
 
 def insert_piece(column, color):
     col = board[column]
-    if col[-1] != NONE:
-        raise Exception('Column is full')  
     row = 0
     while col[row] != NONE:
         row += 1
-
     board[column][row] = color
     winner = is_position_winner(column, row)
     return winner
@@ -58,27 +57,37 @@ def print_board():
     print()
 
 
-def turn_check(play):
-    # for both valid entry and valid selection
-    pass
-    
+def turn_check(player):
+    check_loop = True
+    while check_loop == True:
+        user_play = input('{}\'s turn: '.format('Red' if player == RED else 'Yellow'))
+
+        if user_play.isnumeric() and 0 <= int(user_play) <= 6:
+            col = board[int(user_play)]
+            if col[-1] == NONE:
+                break
+            else:
+                print('Column is full. Try again!')  
+        else:
+            print("Please enter a valid number!")
+
+    return user_play
+
 
 def main():
     player = RED
     game_loop = True
-    
     while game_loop == True:
         print_board()
         
-        user_play = input('{}\'s turn: '.format('Red' if player == RED else 'Yellow'))
+        user_play = turn_check(player)
 
-        # need value checking and column checking on user_play
         inserted_piece = insert_piece(int(user_play), player)
         if inserted_piece == True:
             print("We have a winner! Congratulations {}".format(player))
 
             game_loop = False
-            print()
+            print_board()
 
         player = YELLOW if player == RED else RED
 
