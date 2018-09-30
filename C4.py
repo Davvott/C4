@@ -1,4 +1,6 @@
-#! C4.py
+#! Connect4.py
+# ! Connect4.py
+import pygame
 
 NONE = '.'
 RED = 'R'
@@ -8,7 +10,8 @@ columns = 7
 rows = 6
 required_to_win = 4
 
-board = [[NONE] * rows for _ in range(columns)]  
+board = [[NONE] * rows for _ in range(columns)]
+
 
 def insert_piece(column, color):
     col = board[column]
@@ -19,12 +22,12 @@ def insert_piece(column, color):
     winner = is_position_winner(column, row)
     return winner
 
+
 # function works when insert piece() adds to column[row] from 0 +=1
 def is_position_winner(pos_col, pos_row):
     item = board[pos_col][pos_row]
     row_bound = len(board[0])
     col_bound = len(board)
-
 
     for delta_col, delta_row in [(0, 1), (1, 0), (1, 1), (-1, 1)]:
         consecutive_items = 1
@@ -48,8 +51,7 @@ def is_position_winner(pos_col, pos_row):
 
 
 def print_board():
- 
-    for y in range(rows-1,-1,-1):
+    for y in range(rows - 1, -1, -1):
         print('  '.join(str(board[x][y]) for x in range(columns)))
 
     # print header /footer of column numbers (col index)
@@ -59,15 +61,15 @@ def print_board():
 
 def turn_check(player):
     check_loop = True
-    while check_loop == True:
-        user_play = input('{}\'s turn: '.format('Red' if player == RED else 'Yellow'))
+    while check_loop:
+        user_play = input("{}'s turn: ".format('Red' if player == RED else 'Yellow'))
 
         if user_play.isnumeric() and 0 <= int(user_play) <= 6:
             col = board[int(user_play)]
             if col[-1] == NONE:
                 break
             else:
-                print('Column is full. Try again!')  
+                print('Column is full. Try again!')
         else:
             print("Please enter a valid number!")
 
@@ -77,9 +79,9 @@ def turn_check(player):
 def main():
     player = RED
     game_loop = True
-    while game_loop == True:
+    while game_loop:
         print_board()
-        
+
         user_play = turn_check(player)
 
         inserted_piece = insert_piece(int(user_play), player)
@@ -90,5 +92,6 @@ def main():
             print_board()
 
         player = YELLOW if player == RED else RED
+
 
 main()
