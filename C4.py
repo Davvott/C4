@@ -1,37 +1,52 @@
 #! Connect4.py
 # ! Connect4.py
-import pygame
+# import pygame
 
+
+# Constants, inc. string values printed to board
 NONE = '.'
 RED = 'R'
 YELLOW = 'Y'
 
-columns = 7
-rows = 6
+COLS = 7
+ROWS = 6
 required_to_win = 4
 
-board = [[NONE] * rows for _ in range(columns)]
+
+# Cursory board initialisation
+def board_init():
+    board = [[NONE] * ROWS for _ in range(COLS)]
+    return board
 
 
+# Inserts 'piece' from users turn to board, returns is_winner()
 def insert_piece(column, color):
     col = board[column]
     row = 0
+
     while col[row] != NONE:
         row += 1
+
     board[column][row] = color
+
     winner = is_position_winner(column, row)
+
     return winner
 
 
 # function works when insert piece() adds to column[row] from 0 +=1
 def is_position_winner(pos_col, pos_row):
+
+    # TODO check if shallow copies are redundant/efficient
     item = board[pos_col][pos_row]
     row_bound = len(board[0])
     col_bound = len(board)
 
+    # Defines (x,y) pair directions vert, horz, left diag, right diag
     for delta_col, delta_row in [(0, 1), (1, 0), (1, 1), (-1, 1)]:
         consecutive_items = 1
 
+        # Check loop for directions via each +- iterations
         for delta in (1, -1):
             delta_col *= delta
             delta_row *= delta
@@ -45,17 +60,18 @@ def is_position_winner(pos_col, pos_row):
                     break
                 if consecutive_items == 4:
                     return True
+
                 next_row += delta_row
                 next_col += delta_col
     return False
 
 
 def print_board():
-    for y in range(rows - 1, -1, -1):
-        print('  '.join(str(board[x][y]) for x in range(columns)))
+    for y in range(ROWS - 1, -1, -1):
+        print('  '.join(str(board[x][y]) for x in range(COLS)))
 
     # print header /footer of column numbers (col index)
-    print('__'.join(map(str, range(columns))))
+    print('__'.join(map(str, range(COLS))))
     print()
 
 
@@ -64,7 +80,7 @@ def turn_check(player):
     while check_loop:
         user_play = input("{}'s turn: ".format('Red' if player == RED else 'Yellow'))
 
-        if user_play.isnumeric() and 0 <= int(user_play) <= 6:
+        if user_play.isnumeric() and 0 <= int(user_play) <= (COLS-1):
             col = board[int(user_play)]
             if col[-1] == NONE:
                 break
@@ -76,23 +92,31 @@ def turn_check(player):
     return user_play
 
 
+board = board_init()
+
+
 def main():
-    player = RED
+
+    # Start on player Red
+    player_color = RED
     game_loop = True
+
+    # Main game loop
     while game_loop:
         print_board()
 
-        # TODO check user_play doesn't return invalid or unusable value
-        user_play = turn_check(player)
+        # Prompt and check user turn
+        user_play = turn_check(player_color)
 
-        inserted_piece = insert_piece(int(user_play), player)
+        # Apply turn play to board
+        inserted_piece = insert_piece(int(user_play), player_color)
         if inserted_piece == True:
-            print("We have a winner! Congratulations {}".format(player))
+            print("We have a winner! Congratulations {}".format(player_color))
 
             game_loop = False
             print_board()
 
-        player = YELLOW if player == RED else RED
+        player = YELLOW if player_color == RED else RED
 
 
 main()
