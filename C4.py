@@ -82,6 +82,7 @@ def main():
     while game_loop:
         print_board()
 
+        # TODO check user_play doesn't return invalid or unusable value
         user_play = turn_check(player)
 
         inserted_piece = insert_piece(int(user_play), player)
