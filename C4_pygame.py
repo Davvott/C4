@@ -36,7 +36,7 @@ def main():
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
     font = pygame.font.SysFont('Calibri', 25, True, False)
-    pygame.display.set_caption('ALLYOURBASEABELONGTOUS')
+    pygame.display.set_caption('C4')
     main_board = get_new_board()
 
     turn = "player"
@@ -73,7 +73,6 @@ def main():
         if turn == "computer":
             # index of poss_moves is COL, value is fitness
             computer_move = get_computer_move(main_board, YELLOW_TKN)
-            print("COmp move {}".format(computer_move))
             comp_row = get_lowest_row(main_board, computer_move)
             main_board[computer_move][comp_row] = YELLOW_TKN
 
@@ -183,7 +182,6 @@ def get_computer_move(board, color):
         if possible_moves[col] < initial_strength:
             possible_moves[col] = initial_strength
 
-    # PROBLEM - with is_valid() check for counter moves --- reassigning existing tiles!!!
     best_moves = []
     max_str = max(possible_moves)
 
@@ -256,12 +254,10 @@ def calc_consecutive(pos_col, pos_row, board):
                 next_row += delta_row
                 next_col += delta_col
                 if consecutive_items == 4:
-                    print("RETURNING BLANK IN A ROW")
                     return 4
                 if temp_con > max_consecutive:
                     max_consecutive = temp_con
 
-    print("Max Consecutive {} temp con {}".format(max_consecutive, temp_con))
     return max_consecutive
 
 
