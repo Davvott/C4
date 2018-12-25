@@ -30,7 +30,11 @@ BGCOLOR = BRIGHTBLUE
 TEXTCOLOR = WHITE
 
 
+
 def main():
+    '''
+        Main function: calls user and computer turns
+    '''
     global screen, clock, font
     pygame.init()
     clock = pygame.time.Clock()
@@ -44,30 +48,31 @@ def main():
     carry_on = True
     while carry_on:
 
-        # --- Game logic should go here
+        # --- Game logic ---
 
         for event in pygame.event.get():
             if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                 pygame.quit()
                 sys.exit()
-            # User pressed down on a key
+        # Draw board
         screen.fill(WHITE)
         draw_board(main_board)
 
         if turn == "player":
             # Human player's turn.
-            # TEST FOR CORRECT COLOR TILE??
+            # TEST FOR CORRECT COLOR TILE?
             xy_pos = get_player_move(main_board)
-
+            
+            # Check for win
             if is_position_winner(xy_pos[0], xy_pos[1], main_board):
+                # Render some WInninG Text
                 text = font.render("You WIN!", True, BLACK)
-                # test = len(text)
                 screen.blit(text, [WIN_WIDTH // 2, WIN_HEIGHT - P_SIZE])
 
                 # break to outside Main Loop for reset or quit
                 carry_on = False
                 break
-            # switch to other player's turn
+            # switch to other computers's turn
             turn = "computer"
 
         if turn == "computer":
@@ -109,6 +114,11 @@ def main():
 
 
 def make_move(board, col, tile):
+    '''
+        takes duplicate/board, col, and tile color
+        get's lowest row and sets board pos to color
+        returns consecutive tiles with that board
+    '''
     row = get_lowest_row(board, col)
     board[col][row] = tile
     return calc_consecutive(col, row, board)
@@ -116,13 +126,13 @@ def make_move(board, col, tile):
 
 # basic algo to check each column move, and every counter move from that
 def get_computer_move(board, color):
-    # Set colors
+    # Set colors; irrelevant atm
     if color == YELLOW_TKN:
         other_color = RED_TKN
     else:
         other_color = YELLOW_TKN
 
-    # possible_moves index is col, val is strength
+    # possible_moves index position is col, value of index pos is strength
     possible_moves = [0] * COLS
     for col in range(COLS):
         dupe_board = copy.deepcopy(board)
@@ -137,12 +147,12 @@ def get_computer_move(board, color):
         initial_strength = calc_consecutive(col, lowest_row, dupe_board)
         initial_strength = make_move(dupe_board, col, color)
 
-        # Check is winner
+        # Check if winner
         if is_position_winner(col, lowest_row, dupe_board):
             possible_moves[col] = REQ_TO_WIN
             return col
 
-        # Check is winner for other color
+        # Else, Check is winner for other color from that pos
         dupe_board2 = copy.deepcopy(dupe_board)
         dupe_board2[col][lowest_row] = other_color
         if is_position_winner(col, lowest_row, dupe_board2):
@@ -158,16 +168,17 @@ def get_computer_move(board, color):
 
             counter_row = get_lowest_row(dupe_board2, counter_col)
 
-            # Play other_color tile for each potential counter
+            # Test Play other_color tile for potential counter
             dupe_board2[counter_col][counter_row] = other_color
             counter_row = get_lowest_row(dupe_board2, counter_col)
             counter_strength = calc_consecutive(counter_col, counter_row, dupe_board2)
 
             # Check is_valid() for playing other_color
             if not is_valid_move(dupe_board2, counter_col):
+                # Skip to next counter position
                 continue
 
-            # Is winner, then don't play init col
+            # If counter is winner, then don't play init col
             # This can produce deviant results - where counter col is same as col
             if is_position_winner(counter_col, counter_row, dupe_board2):
                 possible_moves[col] = -1
@@ -194,7 +205,12 @@ def get_computer_move(board, color):
 
 
 def get_player_move(board):
+    '''
+        Player move: click on column for tile placement
+        Automatically drops tile to lowest row
+    '''
     while True:
+        # Check for exit, mouse click
         for event in pygame.event.get():
             if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                 pygame.quit()
@@ -260,7 +276,7 @@ def calc_consecutive(pos_col, pos_row, board):
 
     return max_consecutive
 
-
+# Almost duplicate code of consecutive_strength
 def is_position_winner(pos_col, pos_row, board):
     # item = board[pos_col][pos_row]
     row_bound = len(board[0])
@@ -308,14 +324,14 @@ def animate_falling_token(board, column, color):
         pygame.display.update()
         clock.tick()
 
-
+# Gravity call - will find lowest row for tile placement
 def get_lowest_row(board, col):
     row = 5
     while board[col][row] != NONE and row > -1:
         row -= 1
     return row
 
-
+# Checks if tile can be placed
 def is_valid_move(board, col):
     lowest_row = get_lowest_row(board, col)
     if lowest_row == -1:
@@ -323,7 +339,7 @@ def is_valid_move(board, col):
     else:
         return True
 
-
+# Initialize board for new game
 def get_new_board():
     board = [[NONE] * ROWS for _ in range(COLS)]
     return board
