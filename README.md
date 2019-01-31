@@ -1,4 +1,4 @@
-# Connect4
+# C4
 ========================================================
 
 My version of a C4 game, utilizing pygame
@@ -10,7 +10,7 @@ My version of a C4 game, utilizing pygame
 - TODO: could refine algo for computer turn
 
 The is_position_winner() is what I like most about this implementation. Elegant and fast, I fumbled through others' versions 
-of itertool, groupby, etc... and then found this. Problem solved. I'm sure it's a style of algorithm with it's own name, I've updated this function now (duplicated) to return consecutive tiles as a value for 'strength' of moves or potential counter moves. Ideally, would be nice to merge the two functions, but, not sure I can be bothered
+of itertool, groupby, etc... and then found this. Problem solved. I've updated this function now (duplicated) to return consecutive tiles as a value for 'strength' of moves or potential counter moves. Ideally, would be nice to merge the two functions, but, not sure I can be bothered
 
 # Blackjack
 ========================================================
